@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<title>%title%</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="./css/lib/fontawesome-free-6.7.2-web/css/all.min.css" />
+		<link id="selected-editor-style" href="./third_party/codemirror-5.65.18/lib/codemirror.css" rel="stylesheet" />
+		<link rel="stylesheet" href="./_projects/traversy_media_mashup/css/themes/highlight/default.min.css" id="highlight-theme" />
+		
+		<link rel="stylesheet" type="text/css" href="./css/prism.css" id="selected-highlighter-style" />
+		<link id="selected-highlighter-theme" href="https://ui.akd/_ui-includes/vendors/prism/themes/prism-tomorrow.min.css" rel="stylesheet" id="highlighter-prism-theme" />
+		<link href="./__css/akd-util.css?_=85504840" rel="stylesheet" />
+		<link href="./__css/akd-router.css?_=58484500" rel="stylesheet" />
+	</head>
+	<body>
+		<main id="main" data-layout="grid-auto" data-layout-row-auto="auto-1fr">
+			<header class="output-header">
+				<h2>AKD Router</h2>
+				<span>
+					<button id="reset" class="reset" type="button">Reset</button>
+					<button id="run" class="run" type="button">Run &rsaquo;</button>
+				</span>
+			</header>
+			
+			<section id="router-main-splitter" class="router splitter horizontal flex flex--col h--12" data-ratio="35:65" data-splitter-orientation="horizontal">
+				<div id="router-main-splitter-navigation-area" class="router-navigation-area splitter_panel first--half flex flex--col h--12 ui-pattern-1">
+					<!-- <ul class="router-ul">
+						<li><a href="#/" data-route-link data-route="#/">Home</a></li>
+						<li><a href="#/page1" data-route-link data-route="#/page1">Page 1</a></li>
+						<li><a href="#/page2" data-route-link data-route="#/page2">Page 2</a></li>
+						<li><a href="#/tools" data-route-link data-route="#/tools">Tools</a></li>
+						<li><a href="#/vagina" data-route-link data-route="#/vagina">anigav</a></li>
+						<li><a href="#/extensions" data-route-link data-route="#/extensions">Extensions</a></li>
+						<li><a class="spinFadeOut" href="#/settings" data-route-link data-route="#/settings">Settings</a></li>
+						<li><a class="spinFadeIn" href="#/history" data-route-link data-route="#/history">History</a></li>
+					</ul>
+					<ul class="router-ul">
+						<li><button class="active" data-route-link data-route="#/welcome">Welcome</button></li>
+						<li><button data-route-link data-route="#/">Home</button></li>
+						<li><button data-route-link data-route="#/tools">Tools</button></li>
+						<li><button data-route-link data-route="#/skills">Skills</button></li>
+						<li><button data-route-link data-route="#/404">404</button></li>
+					</ul> -->
+					<ul id="router-main-nav" class="router-ul"></ul>
+				</div>
+				<span id="router-main-splitter-handle" class="splitter_handle z-index-2"></span>
+				<div id="router-main-splitter-views-area" class="router-views-area splitter_panel second--half flex flex--row h--12 bg--gray-gradient2">
+					<div id="template-view" class="router-view flex flex--col"><p>template view </p></div>
+					<!-- <div id="absurd-template-view" class="router-view"><p>absurd template view </p></div>
+					<section id="view" class="router-view fade"><p>view 1</p></section>
+					<section id="view2" class="router-view fade"><p>view 2</p></section> -->
+				</div>
+			</section>
+		</main>
+		
+		<script id="welcome-template" type="text/template">
+			<h1>Welcome to <%= page.title %> Page</h1>
+			<h3>Please visit our friends: </h3>
+			<br />
+			<ul class="external-links">
+				<% for(var i = 0;i<page.links.length;i++){ %>
+				<li><a href="#!links/<%= page.links[i] %>"><%= page.links[i] %></a></li>
+				<% } %>
+			</ul>
+		</script>
+		<script id="test-template" type="text/template">
+			<h1>Welcome to <%= title %> Page</h1>
+			<h3>Please visit our <%= title %> friends: </h3>
+			<br />
+			<ul class="external-links">
+				<% for(var i = 0;i<links.length;i++){ %>
+				<li><a href="#!links/<%= links[i] %>"><%= links[i] %></a></li>
+				<% } %>
+			</ul>
+		</script>
+		<script type="text/html" id="home"><h1>PBD Hash Router &amp; Templater!</h1></script>
+		<script type="text/html" id="template1">
+			<h1>Page 1: {{= greeting }}</h1>
+			<p><%= moreText %></p>
+			<button class="my-button">Click me <%= counter %></button>
+		</script>
+		<script type="text/html" id="template2"><h1>Page 2: <%= heading %></h1><p>Lorem ipsum...</p></script>
+		<script type="text/html" id="tools">
+			<h1>Tools: {{= obj.heading }}</h1>
+			<p>Tools Page : {{= greeting }}</p>
+			<p>Lorem ipsum...</p>
+			<p><%= link.web %></p>
+			<p><%= link.return %></p>
+			<p><%= moreText.summary %></p>
+			<p><%= moreText.description %></p>
+			<div id="more" class="more hidden">
+				<span><#= link.hash #></span>
+				<span>{{= link.web }}</span>
+				<span>{{= link.return }}</span>
+				<%= AKD_Router().tmpl(document.getElementById("tools-web").innerHTML,{heading:"Web Made Easier",greeting:"Thanks for using the web utiliities tools page",moreText:{description:"This page shows tools which can improve the web experience greatly"},link:{web:"<a href=\"web.php\">web</a>",return:"<a href=\"router.php\">return</a>"},error:"Error:"}) %>
+			</div>
+		</script>
+		<script type="text/html" id="tools-web">
+			<h1>Tools > Web : {{= heading }}</h1>
+			<p>Web Tools Page : {{= greeting }}</p>
+			<p><%= moreText.description %></p>
+			<p>{{= link.web }}</p>
+			<p>{{= link.return }}</p>
+		</script>
+		<script id="settings-template" type="text/x-template">
+			<h2>Settings</h2>
+			<p>The default browser is currently Google Chrome.</p>
+		</script>
+
+		<script id="extensions-template" type="text/x-template">
+			<h2>Extensions</h2>
+			<p>You currently have no browser extensions installed.</p>
+		</script>
+
+		<script id="history-template" type="text/x-template">
+		   <h2>History</h2>
+		   <p>Your browsing history will display here.</p>
+		</script>
+
+		<script id="skills-template2" type="text/x-template">
+			
+			<h3><%this.title%>:</h3>
+			<%if(this.showSkills) {%>
+				<ul class="page-links">
+					<%for(var index in this.skills){%>
+					<li data-route-link data-route="skills/<%this.skills[index]%>"><a href="#!skills/<%this.skills[index]%>"><%this.skills[index]%></a></li>
+					<%}%>
+				</ul>
+			<%} else {%>
+				<p>none</p>
+			<%}%>
+		</script>
+
+		<script id="not-found-template" type="text/x-template">
+			<h2>404:Not Found</h2>
+			<p>Sorry! I cannot find that page you requested : <strong><#= page #></strong>.</p>
+			<#= message #>
+		</script>
+		
+		<script id="vagina" type="text/html">
+			<h1>{{= heading }}</h1>
+			<%= galleryContent %>
+		</script>
+		
+		<script id="snippets" type="text/html">
+			<div class="h--12" data-layout="grid-auto" data-layout-rows="auto 1fr">
+				<h1><%= heading %></h1>
+				<div id="<%= containerID %>" class="flex h--12 overflow--hidden">
+					<div class="alpha accordion f--4 w--4 flex flex--col h--12 overflow--hidden gap--4 p--4">
+						<%= snippetsViewNav %>
+					</div>
+					<div class="omega contents f--8 w--8 <%=(i % 2 == 1 ? " even" : "")%>" data-layout="grid-auto" data-layout-rows="auto 1fr">
+						<%= snippetContent %>
+						<div id="snippet-viewer" class="pos--rel f--12 w--12 h--12 overflow--auto"></div>
+					</div>
+				</div>
+			</div>
+			<div class="snippet-links-container flex flex--col bg--secondary-gradient p--8">
+				<div class="flex flex--center gap--4 p--1">
+					<button class="akd__btn snippet-filter-button bdr--0-tr bdr--2-tl bdr--0-br bdr--2-bl py--4 px--8 flex--stretch-self"><i class="fa fa-search"></i></button>
+					<input class="snippet-filter-input f--12 bdr--0-tl bdr--2-tr bdr--0-bl bdr--2-br" type="text" name="" maxlength="30" value="" placeholder="enter filter term" />
+				</div>
+				<div class="snippet-links px--2 h--12 overflow--auto">
+					<%= snippetLinks %>
+				</div>
+				<div class="toggle-handle player-toggle-handle"><span class=""></span></div>
+			</div>
+		</script>
+		
+		<script id="snippet-viewer-template" type="text/html">
+			<article class="article snippet p--0">
+				<div class="article-cover bg--cover bg--no-repeat bg--fixed bg--snippet">
+					<div class="article-title after m--auto bg--transparent"><span class="h3 w--12 text--center">Snippets viewer: <ins><%= id %></ins></span></div>
+				</div>
+				<div class="article-meta p--4 bg--default">
+					
+				</div>
+				<div class="article-body">
+					<section class="flex gap--4 px--4 pos--rel w--12">
+						<div class="akd__card offset-card article-col bg--secondary bg--secondary-gradient pos--rel w--sm-12 w--md-12 w--lg-10 bdr--4 mb--x5 ml--auto mr--auto">
+							<span class="akd__card-header"><ins class="mr--2"></ins> <%= id %></span>
+							<div class="akd__card-body w--12">
+								<span class="flex flex--between">
+									<span class="flex-place-center gap--2 p--4 bdr--2-tl bdr--2-tr text--dark bg--gray-gradient2"><i class="fa fa-address-card"></i><span><%= id %></span></span>
+									<span class="flex-place-center gap--2 p--4 bdr--2-tl bdr--2-tr text--dark bg--gray-gradient2"><span class="flex gap--2"><i class="fa fa-code-branch"></i><i class="fa fa-file-code"></i></span><a href="<%= id %>"><%= id %></a></span>
+								</span>
+								
+								<div class="p--4 mb--4 bdr--2 bdr--0-tl bdr--0-tr bg--gray-gradient2 text--dark"><%= attributes.text %></div>
+								<div class="tags flex flex--wrap w--100 p--4 gap--2 text--center bdr--2 bg--gray-gradient2">
+									<% for(var i = 0; i < attributes.tags.length; i++ ) { %>
+										<span class="tag"><a class="ajax-link" href="?mode=tags&amp;section=tags&amp;tag=<%=attributes.tags[i]%>" data-response-type="json"><i class="fa fa-tag"></i> <span><%=attributes.tags[i]%></span></a></span>
+									<% } %>
+								</div>
+								
+								<span class="spacer"></span>
+								
+								<div class="code-box px--8 py--x2 mx--nx2 mb--nx5 bdr--4-br bdr--4-bl bg--dark ui-pattern-1">
+									<div class="copy-button-container"><button class="copy-button" aria-label="Copy to clipboard"></button></div>
+									
+									<div class="code-box-toolbar bg--secondary-gradient px--4 py--2 my--8 bdr--2">
+										<label class="code-box-label" for="highlighter-theme-select">
+											<span class="flex-place-center bg--success mr--2 px--2 py--1 bdr--2"><span class="mobile--hidden">Syntax</span> Theme</span>
+											<select id="highlighter-theme-select" class="bdr--2">
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/default.min.css" selected="">default</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/atom-one-light.min.css">Atom-one (light)</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/atom-one-dark.min.css">Atom-one (dark)</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/atom-one-dark-reasonable.min.css">Atom-one (dark-reasonable)</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/github.min.css">Github</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/github-dark.min.css">Github (dark)</option>
+												<option value="https://ui.akd/_ui-content/dev/_assets/css/themes/highlight/github-dark-dimmed.min.css">Github (dark-dimmed)</option>
+											</select>
+										</label>
+										<label class="code-box-label" for="">
+											<span class="flex-place-center bg--info mr--2 px--2 py--1 bdr--2">Wrap <span class="mobile--hidden">Syntax?</span></span>
+											<select id="wrap-select" class="bdr--2">
+												<option value="pre" selected="">default</option>
+												<option value="pre-line">pre line</option>
+												<option value="pre-wrap">pre wrap</option>
+												<option value="nowrap">no wrap</option>
+												<option value="normal">normal</option>
+											</select>
+										</label>
+										<span class="code-box-toolbar-buttons flex gap--4">
+											<button id="syntax-toggler" class="code-box-toolbar-button double-fa-btn" title="toggle highlighter height"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></button>
+											<button id="syntax-copy-to-clipboard" class="code-box-toolbar-button"><i class="fa fa-clipboard"></i></button>
+										</span>
+									</div>
+									<div class="block py--4 pos--rel w--100 bdr--2">
+										<span class="collapse-bar toggled mb--4 bdr--2 flex-place-center">ES6 <span class="copy-to-clipboard btn ml--auto bdr--50"><i class="fa fa-clipboard-list"></i></span></span>
+										<pre id="code-box-main-syntax" class="section card-examples language-js bdr--2 p--4"><%= attributes.codeBlocks.es6 %></pre>
+									</div>
+									<div class="block py--4 pos--rel w--100 bdr--2">
+										<span class="collapse-bar mb--4 bdr--2 flex-place-center">ES5 <span class="copy-to-clipboard btn ml--auto bdr--50"><i class="fa fa-clipboard-list"></i></span></span>
+										<pre class="section card-examples language-js bdr--2 p--4"><%= attributes.codeBlocks.es5 %></pre>
+									</div> 
+									<div class="block py--4 pos--rel w--100 bdr--2">
+										<span class="collapse-bar mb--4 bdr--2 flex-place-center">Example <span class="copy-to-clipboard btn ml--auto bdr--50"><i class="fa fa-clipboard-list"></i></span></span>
+										<pre class="section card-examples language-js bdr--2 p--4"><%= attributes.codeBlocks.example %></pre>
+									</div>
+									<div class="flex flex--col gap--4 py--4 pos--rel w--100 vh--max-50 overflow--auto-y">
+										<div class="flex gap--4 py--4 pos--rel w--100">
+											<div class="w--12">
+												<span class="block text--900 text--center mb--2 w--12">Tags</span>
+												<ul class="rectangle-list2 w--12">
+													<% for ( var i = 0; i < attributes.tags.length; i++ ) { %>
+														<li><span class="tag"><a class="ajax-link" href="?mode=tags&amp;section=tags&amp;tag=<%=attributes.tags[i]%>" title"<%=attributes.tags[i]%>" data-response-type="json"><i class="fa fa-tag"></i> <span><%=attributes.tags[i]%></span></a></span></li>
+													<% } %>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="akd__card-footer text--white" style="bottom: -2.5rem;">
+								<a class="ajax-link" href="?mode=ext-snippets&amp;section=settings" data-response-type="json"><i class="fa fa-photo-video"></i> Frameworks Settings</a>
+							</div>
+						</div>
+					</section>
+					<div class="akd__card-footer flex">
+						<a class="ajax-link p--8 bg--default bdr--x2" href="?mode=ext-snippets&amp;section=home" data-response-type="json"><i class="fa fa-long-arrow-left"></i> go to media home</a>
+						
+						<div class="flex flex--even ml--auto">
+							<a class="cta-btn snippet-view-link" href="#" data-href="<%= prevSnippet.attributes.fileName %>" data-file-href="./app/data/md/<%= prevSnippet.attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= prevIndex %>" data-snippet-section="<%= prevSection %>" data-snippet-id="<%= prevSnippet.id %>" data-snippet-language="<%= prevSnippet.language %>" title="<%= prevSnippet.id %>"><i class="fa fa-chevron-left"></i> previous </a>
+							<a class="cta-btn snippet-view-link" href="#" data-href="<%= nextSnippet.attributes.fileName %>" data-file-href="./app/data/md/<%= nextSnippet.attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= nextIndex %>" data-snippet-section="<%= nextSection %>" data-snippet-id="<%= nextSnippet.id %>" data-snippet-language="<%= nextSnippet.language %>" title="<%= nextSnippet.id %>"> next <i class="fa fa-chevron-right"></i></a>
+						</div>
+					</div>
+				</div>
+			</article>
+		</script>
+		
+		<script id="snippet-viewer-template2" type="text/html">
+			<article class="flex">
+				<h1><%= id %></h1>
+				<nav class="">
+					<ul class="flex flex--row gap--4">
+						<li><a href="<%=attributes.fileName%>">fileName: <%=attributes.fileName%></a></li>
+					</ul>
+					<ul class="tags flex flex--row gap--2">
+					<% for ( var i = 0; i < attributes.tags.length; i++ ) { %>
+						<li class="tag"><a href="<%=attributes.tags[i]%>"><%=attributes.tags[i]%></a></li>
+					<% } %>
+					</ul>
+					
+					<ul class="snippet-view-nav flex flex--col f--6 h--6 p--4 overflow--auto ui-pattern-1">
+						<% for(var i = 0;i < snippets.extra.length;i++){ %>
+						<li><a class="snippet-view-link" href="#" data-href="<%= snippets.extra[i].attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= i %>" data-snippet-section="extra" data-snippet-id="<%= snippets.extra[i].id %>" data-snippet-language="<%= snippets.extra[i].language %>"><%= snippets.extra[i].attributes.fileName %></a></li>
+						<% } %>
+					</ul>
+					<ul class="snippet-view-nav flex flex--col f--6 h--6 p--4 overflow--auto ui-pattern-1">
+						<% for(var i = 0;i < snippets.data.length;i++){ %>
+						<li><a class="snippet-view-link" href="#" data-href="<%= snippets.data[i].attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= i %>" data-snippet-section="data" data-snippet-id="<%= snippets.data[i].id %>" data-snippet-language="<%= snippets.data[i].language %>"><%= snippets.data[i].attributes.fileName %></a></li>
+						<% } %>
+					</ul>
+				</nav>
+				<section>
+					<p><%= attributes.text %></p>
+					<div class="flex flex--col">
+						<pre><code><%= attributes.codeBlocks.es6 %></code></pre>
+						<pre><code><%= attributes.codeBlocks.es5 %></code></pre>
+						<pre><code><%= attributes.codeBlocks.examples %></code></pre>
+					</div>
+				</section>
+			</article>
+			<div class="snippet-links-container flex flex--col bg--secondary-gradient p--8">
+				<div class="flex flex--center gap--4 p--1">
+					<button class="akd__btn snippet-filter-button bdr--0-tr bdr--2-tl bdr--0-br bdr--2-bl py--4 px--8 flex--stretch-self"><i class="fa fa-search"></i></button>
+					<input type="text" name="" maxlength="30" value="" placeholder="enter filter term" class="filter-input f--12 bdr--0-tl bdr--2-tr  bdr--0-bl bdr--2-br" />
+				</div>
+				<div class="snippet-links px--2 h--12 overflow--auto">
+					<div class="flex flex--col">
+						<span class="p--4 h3">snippet: extra</span>
+						<ul class="rectangle-list pl--x2 flex flex--col mb--8">
+							<% for(var i = 0;i < snippets.extra.length;i++) { %>
+							<li data-title="<%= snippets.extra[i].id %>"><a class="snippet-view-link<%= (id === snippets.extra[i].id ? " active" : "") %>" href="#" data-href="<%= snippets.extra[i].attributes.fileName %>" data-file-href="./app/data/md/<%= snippets.extra[i].attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= i %>" data-snippet-section="extra" data-snippet-id="<%= snippets.extra[i].id %>" data-snippet-language="<%= snippets.extra[i].language %>"><%= snippets.extra[i].attributes.fileName %></a></li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="flex flex--col">
+						<span class="p--4 h3">snippet: extra</span>
+						<ul class="rectangle-list pl--x2 flex flex--col">
+							<% for(var i = 0;i < snippets.data.length;i++){ %>
+							<li data-title="<%= snippets.data[i].id %>"><a class="snippet-view-link<%= (id === snippets.data[i].id ? " active" : "") %>" href="#" data-href="<%= snippets.data[i].attributes.fileName %>" data-file-href="./app/data/md/<%= snippets.data[i].attributes.fileName %>" data-target-template="#snippet-viewer-template" data-target="#snippet-viewer" data-snippet-index="<%= i %>" data-snippet-section="data" data-snippet-id="<%= snippets.data[i].id %>" data-snippet-language="<%= snippets.data[i].language %>"><%= snippets.data[i].attributes.fileName %></a></li>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+				<div class="toggle-handle player-toggle-handle"><span class=""></span></div>
+			</div>
+		</script>
+		
+		<script type="text/html" id="item-template">
+			<div id="<%=id%>" class="<%=(i % 2 == 1 ? " even" : "")%>">
+				<div class="grid_1 alpha right">
+			     	 <img class="righted" src="<%=profile_image_url%>"/>
+				</div>
+				<div class="grid_6 omega contents">
+					<p><b><a href="/<%=from_user%>"><%=from_user%></a>:</b> <%=text%></p>
+			   	</div>
+			</div>
+		</script>
+		<script type="text/html" id="user-template">
+			<% for ( var i = 0; i < users.length; i++ ) { %>
+				<li><a href="<%=users&#91;i&#93;.url%>"><%=users&#91;i&#93;.name%></a></li>
+			<% } %>
+		</script>
+		
+		<!--<script id="selected-editor-script" src="https://ui.akd/_ui-includes/vendors/codemirror/lib/codemirror.js"></script>
+		<script id="selected-highlighter-script" src="https://ui.akd/_ui-includes/vendors/prism/prism.js"></script>-->
+		<script type="text/javascript" src="./js/lib/jquery/jquery-3.6.0.min.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/lib/codemirror.js"></script>
+		<!--<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/selection/selection-pointer.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/edit/matchbrackets.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/comment/continuecomment.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/comment/comment.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/xml/xml.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/jsx/jsx.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/javascript/javascript.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/css/css.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/htmlmixed/htmlmixed.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/edit/matchbrackets.js"></script>-->
+		
+		<script src="./js/akd-util.js?_=876568"></script>
+		<script src="./__js/akd-router.js?_=876568"></script>
+		<script src="./__js/akd-router-templates.js?_=876568"></script>
+		<script src="./__js/akd-router-index.js?_=567688"></script>
+	</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<title>Photo Editor: AmalKong Development</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="./app/assets/css/fontawesome.min.css" />
+		<link rel="stylesheet" href="./app/assets/css/akd-util.css" />
+		<link rel="stylesheet" href="./app/assets/css/akd-photo-editor.css?_=58484500" />
+		<link rel="stylesheet" href="./app/assets/css/cropper.css?_=58484500" />
+	</head>
+	<body class="main-sidebar-toggled-">
+		<main id="main" class="akd__tabs">
+			<header class="flex flex--col pos--rel">
+				<div class="output-header h--12">
+				<h4>Photo Editor</h4>
+				<span class="flex gap--0">
+					<button id="explorer-toggler" class="explorer" type="button"><i class="fa fa-compass mr--1 text--blue"></i>Explorer</button>
+					<button id="discover-button" class="discover" type="button"><i class="fa fa-icons mr--1 text--pink"></i>Discover &rsaquo;</button>
+				</span>
+				</div>
+				<div id="explorer-tab-control-container" class="tab-controls active--tab flex flex--col gap--4 w--12 bg:opaque px--8 py--x2 pos--sti top--0">
+					<div class="flex flex--center gap--4 w--12 bg:opaque px--8 py--2">
+						<span class="flex gap--2">
+							<button id="explorer-home-button" class="akd__btn btn--default" type="button"><i class="fa fa-home"></i></button>
+							<button id="explorer-reload-button" class="akd__btn btn--default" type="button"><i class="fa fa-redo-alt"></i></button>
+						</span>
+						<form id="explorer-form" class="hover--submit w--10 " action="./app/includes/loader.php?mode=browser&amp;action=browse">
+							<input id="explorer-input" class="hover--submit-input w--12 bdr--8 m--auto px--x2 py--6 py--4 text--left text--gray" type="text" placeholder="search for..." onfocus="this.select();">
+							<button id="explorer-submit-button" class="hover--submit-button akd__btn btn--default" type="submit"><i class="fa fa-search"></i></button>
+						</form>
+						<span class="flex gap--2">
+							<button id="explorer-options-button" class="akd__btn btn--default" type="button"><i class="fa fa-cog"></i></button>
+						</span>
+					</div>
+					<div class="d-block w--12 bd--t bdc--default"></div>
+					<div class="flex-place-center gap--4 w--12 px--8 py--2 bg:opaque">
+						<span class="layout-buttons">
+							<button id="" class="layout-button layout-list akd__btn btn--default is-active" type="button" data-layout-option="list"><i class="fa fa-list"></i></button>
+							<button id="" class="layout-button layout-grid akd__btn btn--default" type="button" data-layout-option="grid"><i class="fa fa-th"></i></button>
+							<button id="" class="layout-button layout-thumb akd__btn btn--default" type="button" data-layout-option="icon"><i class="fa fa-icons"></i></button>
+							<button id="" class="layout-button layout-thumb akd__btn btn--default" type="button" data-layout-option="thumb"><i class="fa fa-images"></i></button>
+						</span>
+					</div>
+				</div>
+			</header>
+			<article id="main-body" class="main-body -splitter horizontal" data-ratio="100%:0%">
+				<aside class="sidebar main-sidebar drag-panel-left">
+					<span class="sidebar-header"></span>
+				</aside>
+				<section class="akd__tab-panels main-content">
+					<section id="home-tab" class="akd__tab-panel bg--cover-image">
+						<canvas id="canvas"></canvas>
+						<video id="video"></video>
+						<span id="photo"></span>
+						<button id="startbutton" class="explorer" type="button">Explorer</button>
+					</section>
+					<section id="explorer-tab" class="akd__tab-panel active--tab">
+						<span id="explorer-scroll-indicator" class="scroll-indicator"></span>
+						<!-- <div id="explorer-control-container" class="flex flex--col gap--4 w--12 bg:opaque px--8 py--x2 pos--sti top--0 to--front">
+							<div class="flex flex--center gap--4 w--12 bg:opaque px--8 py--2">
+								<span class="flex gap--2">
+									<button id="explorer-home-button" class="akd__btn btn--default" type="button"><i class="fa fa-home"></i></button>
+									<button id="explorer-reload-button" class="akd__btn btn--default" type="button"><i class="fa fa-redo-alt"></i></button>
+								</span>
+								<form id="explorer-form" class="hover--submit w--10 " action="./app/includes/loader.php?mode=browser&amp;action=browse">
+									<input id="explorer-input" class="hover--submit-input w--12 bdr--8 m--auto px--x2 py--6 py--4 text--left text--gray" type="text" placeholder="search for..." onfocus="this.select();" />
+									<button id="explorer-submit-button" class="hover--submit-button akd__btn btn--default" type="submit"><i class="fa fa-search"></i></button>
+								</form>
+								<span class="flex gap--2">
+									<button id="explorer-options-button" class="akd__btn btn--default" type="button"><i class="fa fa-cog"></i></button>
+								</span>
+							</div>
+							<div class="d-block w--12 bd--t bdc--default"></div>
+							<div class="flex-place-center gap--4 w--12 px--8 py--2 bg:opaque">
+								<span class="layout-buttons">
+									<button id="" class="layout-button layout-list akd__btn btn--default is-active" type="button" data-layout-option="list"><i class="fa fa-list"></i></button>
+									<button id="" class="layout-button layout-grid akd__btn btn--default" type="button" data-layout-option="grid"><i class="fa fa-th"></i></button>
+									<button id="" class="layout-button layout-thumb akd__btn btn--default" type="button" data-layout-option="icon"><i class="fa fa-icons"></i></button>
+									<button id="" class="layout-button layout-thumb akd__btn btn--default" type="button" data-layout-option="thumb"><i class="fa fa-images"></i></button>
+								</span>
+							</div>
+						</div> -->
+						<div id="explorer-result-container" class="flex flex--col w--12 h--12 p--8 gap--4 overflow--auto"  data-view-layout="list"></div>
+					</section>
+					<section id="dropzone-output-tab" class="akd__tab-panel">
+					</section>
+					<section id="photoshop-tab" class="akd__tab-panel">
+					</section>
+					<section id="cropper-tab" class="akd__tab-panel">
+						<div class="cropper-body">
+							<div class="cropper-ui-container">
+								<div class="cropper-ui">
+									<div class="image-container">
+										<div class="image-workspace">
+											<img class="image-workspace-img" src="./app/assets/img/other/7.jpg" alt=""/>
+											<!-- <canvas class="image-workspace-img"></canvas>
+											<div class="resize-window"><i class="handle"></i></div> -->
+											<span>Image Work Space</span>
+										</div>
+									</div>
+									
+									<div class="side-container">
+										<div class="preview-container">
+											<div class="preview-cover">
+												<!-- <canvas class="img-preview" style="height: 100%;width: 100%;" height="150" width="150"></canvas> -->
+												<div class="img-preview preview-lg"></div>
+												<div class="img-preview preview-md"></div>
+												<div class="img-preview preview-sm"></div>
+												<div class="img-preview preview-xs"></div>
+												<span>Image Preview</span>
+											</div>
+										</div>
+										
+										<div class="side-controls-shifter">
+											<button id="" class="neu-button-" type="button"><i class="fa fa-chevron-left"></i></button>
+											<button id="" class="neu-button-" type="button"><i class="fa fa-chevron-right"></i></button>
+										</div>
+										<div class="side-control-page-1">
+											<div class="zoom">
+												<span>Zoom in - out</span>
+												<li><i class="fa fa-search-minus" width="24" height="24"></i></li>
+												<li><i class="fa fa-search-plus" width="24" height="24"></i></li>
+											</div>
+											<div class="rotate">
+												<span>Rotate Image</span>
+												<li><i class="fa fa-rotate-left" width="24" height="24"></i></li>
+												<li><i class="fa fa-rotate-right" width="24" height="24"></i></li>
+											</div>
+											<div class="flip">
+												<span>Flip Image</span>
+												<li><i class="fa fa-" width="24" height="24"></i></li>
+												<li><i class="fa fa-" width="24" height="24"></i></li>
+											</div>
+											<div class="move" style="border-bottom: 0px;">
+												<span style="margin-bottom: 20px;">Move Image</span>
+												<ul class="move-buttons">
+													<li class="move-up"><i class="fa fa-arrow-up"></i></li><br>
+													<li class="move-left"><i class="fa fa-arrow-left"></i></li><br>
+													<li class="move-right"><i class="fa fa-arrow-right"></i></li><br>
+													<li class="move-down"><i class="fa fa-arrow-down"></i></li>
+												</ul>
+											</div>
+										</div>
+										
+										<div class="side-control-page-2">
+											<div class="aspect">
+												<span>Aspect Ratio</span>
+												<li>16:9</li>
+												<li>4:3</li>
+												<li>1:1</li>
+												<li>2:3</li>
+												<li>free</li>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="bottom-container">
+									<div class="action-button">
+										<button id="" class="upload" type="button">Upload</button>
+										<input id="" class="hidden-upload" type="file" style="display: none;" accept="image/*" />
+										<button id="" class="download" type="button">Download</button>
+									</div>
+									
+									<div class="bottom-control">
+										<div class="ctrl-cropper">
+											<span>Select Mask</span>
+											<select class="mask-select">
+												<option value="-1">-- choose mask --</option>
+												<option value="centerblur.png">centerblur</option>
+												<option value="star.png">star</option>
+											</select>
+										</div>
+										<div class="ctrl-cropper">
+											<span>Control Cropper</span>
+											<ul>
+												<li><i class="fa fa-"></i></li>
+												<li><i class="fa fa-crop"></i></li>
+											</ul>
+										</div>
+										<div class="lock">
+											<span>Cropper Lock</span>
+											<ul>
+												<li><i class="fa fa-lock"></i></li>
+												<li><i class="fa fa-lock-open"></i></li>
+											</ul>
+										</div>
+										<div class="drag-mode">
+											<span>Drag Mode</span>
+											<ul>
+												<li><i class="fa fa-crop"></i></li>
+												<li><i class="fa fa-fullscreen"></i></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+				<aside class="sidebar utility-sidebar drag-panel-right">
+					<span class="showcase-drag-handle-"></span>
+				</aside>
+			</article>
+			<footer class="flex">
+				<span class="flex flex--center gap--4 p--4 mr--auto bg--blue-green bdr--2 m--2">
+					<button id="main-sidebar-toggler" class="akd__btn bdr--50 py--3" type="button"><i class="fa fa-chevron-right"></i></button>
+				</span>
+				<nav id="" class="akd__tab-buttons flex-place-center gap--0 w--12 f--12 p--0 bg--blue-green bg:opaque">
+					<button class="akd__tab-button akd__btn btn--orange flex--stretch-self bdr--0" type="button" title="show home tab" data-target-tab="#home-tab" data-parent-tab="#main"><span class="text--truncate">Home</span></button>
+					<button class="akd__tab-button active--tab akd__btn btn--orange flex--stretch-self bdr--0" type="button" title="show explorer tab" data-target-tab="#explorer-tab" data-parent-tab="#main"><span class="text--truncate">Explorer</span></button>
+					<button class="akd__tab-button akd__btn btn--orange flex--stretch-self bdr--0" type="button" title="show dropzone tab" data-target-tab="#dropzone-output-tab" data-parent-tab="#main"><span class="text--truncate">dropzone</span></button>
+					<button class="akd__tab-button akd__btn btn--orange flex--stretch-self bdr--0" type="button" title="show photoshop tab" data-target-tab="#photoshop-tab" data-parent-tab="#main"><span class="text--truncate">photoshop</span></button>
+					<button class="akd__tab-button akd__btn btn--orange flex--stretch-self bdr--0" type="button" title="show cropper tab" data-target-tab="#cropper-tab" data-parent-tab="#main"><span class="text--truncate">cropper</span></button>
+				</nav>
+				<span class="flex flex--center gap--4 p--4 ml--auto bg--blue-green bdr--2 m--2">
+					<button id="utility-sidebar-toggler" class="akd__btn bdr--50 py--3" type="button"><i class="fa fa-chevron-left"></i></button>
+				</span>
+			</footer>
+			
+			<article id="explorer-tabs" class="akd__tabs gap--4 p--4">
+				<nav id="" class="akd__tab-buttons w--12 bdr--8 bg:opaque">
+					<button class="akd__btn btn--orange akd__tab-button home-tab-button active--tab" type="button" title="show home tab" data-target-tab="#home-panel" data-parent-tab="#explorer-tabs"><span class="text--truncate">Home</span></button>
+				</nav>
+				<div id="" class="akd__tab-panels w--12 bdr--8 bg:opaque" style="backdrop-filter: blur(5px);">
+					<section id="" class="akd__tab-panel">
+					</section>
+					<section id="home-panel" class="akd__tab-panel active--tab overflow--hidden">
+						<div class="flex flex--col w--12 h--12">
+							<div class="cards-controls w--12 h--auto p--4">
+								<div class="flex gap--4 w--12 px--4 py--6 bg--inherit bdr--2">
+									<label class="flex-align-center gap--4 w--12" for="grid-column-changer">
+										<input class="grid-column-changer akd__input-range w--12" type="range" min="1" max="8" step="1" value="2" />
+										<span class="grid-column-changer-count">2</span>
+									</label>
+									<label class="flex-align-center gap--4 w--12" for="grid-row-changer">
+										<input class="grid-row-changer akd__input-range w--12" type="range" min="1" max="8" step="1" value="3" />
+										<span class="grid-row-changer-count">3</span>
+									</label>
+								</div>
+							</div>
+							<div class="cards w--12 m--auto ui-pattern-1 flex--wrap" data-layout="flex" data-layout-cols="2" data-layout-rows="3" data-layout-gap="4">
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-1"></div>
+								</div>
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-2"></div>
+								</div>
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-3"></div>
+								</div>
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-4"></div>
+								</div>
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-5"></div>
+								</div>
+								<div class="card">
+									<div class="card-border"></div>
+									<div class="card-content card--bg home-card-bg-6"></div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</article>
+		</main>
+		
+		<template data-key-value-template>
+			<div class="input-group w--12 flex flex--nowrap gap--2 mb--8" data-key-value-pair>
+				<input type="text" class="w--s-6 p--3 m--0 bdr--0-tr bdr--0-br" placeholder="key" data-key>
+				<input type="text" class="w--s-6 p--3 m--0 bdr--0-tl bdr--0-bl" placeholder="value" data-value>
+				<button type="button" class="akd__btn btn--danger --outline ml--4" title="remove this parameter" data-remove-btn>
+					<span class="mobile--hidden text--xs mr--1">Remove</span>
+					<i class="fak fak-times fa fa-times"></i>
+				</button>
+			</div>
+		</template>
+		
+		<template data-headers-key-value-template>
+			<div class="input-group w--12 flex flex--nowrap gap--2 mb--8" data-key-value-pair>
+				<input type="text" class="w--s-6 p--3 m--0 bdr--0-tr bdr--0-br" placeholder="key" data-key>
+				<input type="text" class="w--s-6 p--3 m--0 bdr--0-tl bdr--0-bl" placeholder="value" data-value>
+			</div>
+		</template>
+		
+		<!-- <script src="./app/assets/js/akd-util.2.0.0-dev.js?_=447668"></script>
+		<script src="https://ui.akd/_ui-includes/vendors/jquery/jquery.min.js?_=876568"></script> -->
+		<script src="./app/assets/js/cropper.js?_=876568"></script>
+		<script src="./app/assets/js/akd-photo-editor.js?_=6876568"></script>
+		<script src="./app/assets/js/akd-photo-editor-index.js?_=567688"></script>
+	</body>
+</html>

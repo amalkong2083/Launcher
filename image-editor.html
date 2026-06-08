@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Simple Image Editor</title>
+		<link rel="stylesheet" href="./css/akd.css" />
+		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+		<!-- Import custom stylesheet -->
+		<style>
+			*{margin: 0;padding: 0;}
+			*, *::before, *::after {box-sizing: border-box;}
+			body{display: flex;flex-direction: column;
+			display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: auto 1fr;
+	grid-template-rows: 4rem calc(100% - 5rem);
+	gap: 1rem;
+			}
+			.nav-header {font-size: 1.5rem;}
+			.row {display: flex;gap: 0.75rem;margin-bottom: 0;}
+			.row:not(:last-of-type){margin-bottom: 0.875rem;}
+			
+			#sourceImage, 
+			.image-controls,
+			.image-save,
+			.preset-filters {display: none;}
+			
+			.image-preview {position: relative;isolation: isolate;display: flex;align-items: center;justify-content: center;width: 100%;/*min-height: 420px;*/height: 100%;overflow: auto;object-fit: contain;}
+			#sourceImage{z-index: 2;position: absolute;display: block;margin: auto;object-fit: contain;}
+			#canvas {display: none;z-index: 1;position: absolute;margin: auto;/*max-height: 420px;object-fit: contain;*/border: 2px solid #000;}
+			input[type=range]{-webkit-appearance: none;height: 6px;background: #ddd;border-radius: 20px;cursor: pointer;}
+			input[type=range]::-webkit-slider-thumb{-webkit-appearance: none;height: 15px;width: 20px;border-radius: 20%;background: var(--color, #5B7D9F);cursor: pointer;box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);}
+			input[type=range]::-webkit-slider-thumb:hover{box-shadow:4px 3px 3px #444, inset 3px -2px 5px #555;}
+			input[type=range]::-moz-range-thumb{height: 15px;width: 20px;border-radius: 20%;background: var(--color, #5B7D9F)cursor: pointer;box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);}
+			input[type=range]::-moz-range-thumb:hover{box-shadow:4px 3px 3px #444, inset 3px -2px 5px #555;}
+			input[type=range]::-ms-thumb{height: 15px;width: 20px;border-radius: 20%;background: var(--color, #5B7D9F)cursor: pointer;box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);}
+			input[type=range]::-ms-thumb:hover{box-shadow:4px 3px 3px #444, inset 3px -2px 5px #555;}
+			.container{
+				display: flex;justify-content: center;
+				/*flex-direction: column;*/
+				gap: 0.75rem;
+				align-items: center;
+				padding: 0.75rem;
+			}
+			.nav-container{
+				
+			}
+			.range-field{
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 0.75rem;
+				font-size: 0.875rem;
+				margin-bottom: 0;
+			}
+			.range-field > *{
+				width: 100%;
+			}
+			.input-field{
+				display: flex;
+				gap: 0.75rem;
+			}
+			.image-container{
+				display: grid;
+				grid-template-columns: 100%;
+				grid-template-rows: auto 1fr;
+				grid-template-rows:  calc(60% - 0.23rem) calc(40% - 0.23rem);
+				gap: 0.5rem;
+				min-height: 200px;
+			}
+		</style>
+		<!-- <script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+	</head>
+	<body>
+		<nav class="green bg-success">
+			<div class="nav-wrapper container">
+				<span class="nav-header mr-auto">Simple Image Filters</span>
+				<ul class="right image-save ml-auto">
+					<button class="btn btn-flat blue white-text btn-purple text-white" onclick="toggleEditMode(event)">Edit?</button>
+					<button class="btn btn-flat blue white-text btn-blue text-white" onclick="saveImage()">Save</button>
+					<button class="btn btn-flat red white-text btn-danger text-white" onclick="resetImage()">Reset</button>
+				</ul>
+			</div>
+		</nav>
+		
+		<section id="" class="image-container">
+			<div id="imagePreview" class="image-preview">
+				<!-- Hidden image that will be used for
+				holding the source image -->
+				<img id="sourceImage" crossorigin="anonymous" />
+				
+				<!-- Canvas that will hold the 
+				image to be edited -->
+				<canvas id="canvas" height="0"></canvas>
+			</div>
+			
+		    <div class="container app flex-col" style="border-top: 2px solid #000;">
+		        <!-- Text to be shown at the beginning
+		        of the application -->
+		        <div class="help-text center-align">
+		            <h5>Please Upload an Image to Start Editing</h5>
+		        </div>
+		
+		        <!-- File control to upload a new file -->
+		        <div class="file-controls w-12 mb-auto mt-0">
+		            <h6>File Controls</h6>
+		          
+		            <!-- Element that will be later used to download
+		            the canvas image from code -->
+		            <a id="link"></a>
+		          
+		            <!-- File Selector for uploading the image -->
+		            <div class="file-field input-field">
+		                <div class="btn green btn-success">
+		                    <span>Upload Image</span>
+		                    <input type="file" accept="image/*" onchange="uploadImage(event)" />
+		                </div>
+		                <div class="file-path-wrapper">
+		                    <input class="file-path" type="text">
+		                </div>
+		            </div>
+		        </div>
+				<!-- All the image controls that will be
+		        used for modifying the image -->
+		        <div class="image-controls w-12">
+		            <h6>Image Controls</h6>
+		            <div class="row w-12">
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="brightnessSlider">Brightness</label>
+		                        <input id="brightnessSlider" class="akd-input" type="range" value="100" min="0" max="300" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="contrastSlider">Contrast</label>
+		                        <input id="contrastSlider" type="range" value="100" min="0" max="200" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		            </div>
+		
+		            <div class="row w-12">
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="grayscaleSlider">Grayscale</label>
+		                        <input id="grayscaleSlider" type="range" value="0" min="0" max="100" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="saturationSlider">Saturation</label>
+		                        <input id="saturationSlider" type="range" value="100" min="0" max="300" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		            </div>
+		
+		            <div class="row w-12">
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="sepiaSlider">Sepia</label>
+		                        <input id="sepiaSlider" type="range" value="0" min="0" max="200" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		                <div class="col s6 w-6">
+		                    <span class="range-field">
+		                        <label for="hueRotateSlider">Hue</label>
+		                        <input id="hueRotateSlider" type="range" value="0" min="0" max="360" onchange="applyFilter()">
+		                    </span>
+		                </div>
+		            </div>
+		            
+		            <div class="row controls d-flex p-8 gap-8 pos-sti w-12 ">
+						<span class="d-flex align-center gap-4 p-8">
+							<button id="zoom-in" class="btn btn-purple" type="button">[&nbsp;+&nbsp;]</button>
+							<button id="zoom-out" class="btn btn-purple" type="button">[&nbsp;-&nbsp;]</button>
+						</span>
+						<span class="">
+							<select class="btn btn-success" onchange="sourceImage.style.objectFit = this.value;">
+								<option value="contain">contain</option>
+								<option value="cover">cover</option>
+								<option value="scale-down">scale-down</option>
+								<option value="initial">initial</option>
+							</select>
+						</span>
+					</div>
+		        </div>
+		
+		        <!-- Buttons that will be used to change
+		        the values to preset ones -->
+		        <div class="preset-filters w-12">
+		            <h6>Preset Filters</h6>
+		            <button class="btn green btn-success" onclick="brightenFilter()">Brighten</button>
+		            <button class="btn green btn-success" onclick="bwFilter()">Black and White</button>
+		            <button class="btn green btn-success" onclick="funkyFilter()">Funky</button>
+		            <button class="btn green btn-success" onclick="vintageFilter()">Vintage</button>
+		        </div>
+				
+		    </div>
+		</section>
+		<script>
+			let image = document.getElementById('sourceImage');
+			let canvas = document.getElementById('canvas');
+			let context = canvas.getContext('2d');
+			// Get all the sliders of the image
+			let brightnessSlider = document.getElementById("brightnessSlider");
+			let contrastSlider = document.getElementById("contrastSlider");
+			let grayscaleSlider = document.getElementById("grayscaleSlider");
+			let hueRotateSlider = document.getElementById("hueRotateSlider");
+			let saturateSlider = document.getElementById("saturationSlider");
+			let sepiaSlider = document.getElementById("sepiaSlider");
+			
+			function uploadImage(event) {
+				// Set the source of the image from the uploaded file
+				image.src = URL.createObjectURL(event.target.files[0]);
+				
+				image.onload = function () {
+					// Set the canvas the same width and height of the image
+					canvas.width = this.width;
+					canvas.height = this.height;
+					canvas.crossOrigin = "anonymous";
+					applyFilter();
+				};
+				
+				// Show the image editor controls and hide the help text
+				document.querySelector('.help-text').style.display = "none";
+				document.querySelector('.image-save').style.display = "block";
+				document.querySelector('.image-controls').style.display = "block";
+				document.querySelector('.preset-filters').style.display = "block";
+			};
+
+			function applyFilter() {
+				// Create a string that will contain all the filters
+				// to be used for the image
+				let filterString =
+					"brightness(" + brightnessSlider.value + "%" +
+					") contrast(" + contrastSlider.value + "%" +
+					") grayscale(" + grayscaleSlider.value + "%" +
+					") saturate(" + saturateSlider.value + "%" +
+					") sepia(" + sepiaSlider.value + "%" +
+					") hue-rotate(" + hueRotateSlider.value + "deg" + ")";
+				
+				// Apply the filter to the image
+				context.filter = filterString;
+				
+				// Draw the edited image to canvas
+				// context.drawImage(image, 0, 0);
+				draw(filterString);
+				image.style.filter = filterString;
+				
+			}
+			
+			function brightenFilter() {
+				resetImage();
+				brightnessSlider.value = 130;
+				contrastSlider.value = 120;
+				saturateSlider.value = 120;
+				applyFilter();
+			}
+				
+			function bwFilter() {
+				resetImage();
+				grayscaleSlider.value = 100;
+				brightnessSlider.value = 120;
+				contrastSlider.value = 120;
+				applyFilter();
+			}
+
+			function funkyFilter() {
+				resetImage();
+				// Set a random hue rotation everytime
+				hueRotateSlider.value = Math.floor(Math.random() * 360) + 1;
+				contrastSlider.value = 120;
+				applyFilter();
+			}
+			
+			function vintageFilter() {
+				resetImage();
+				brightnessSlider.value = 120;
+				saturateSlider.value = 120;
+				sepiaSlider.value = 150;
+				applyFilter();
+			}
+			// Reset all the slider values to there default values
+			function resetImage() {
+				brightnessSlider.value = 100;
+				contrastSlider.value = 100;
+				grayscaleSlider.value = 0;
+				hueRotateSlider.value = 0;
+				saturateSlider.value = 100;
+				sepiaSlider.value = 0;
+				applyFilter();
+			}
+			
+			function saveImage() {
+				// Select the temporary element we have created for
+				// helping to save the image
+				let linkElement = document.getElementById('link');
+				linkElement.setAttribute('download', 'edited_image.png');
+				
+				// Convert the canvas data to a image data URL
+				let canvasData = canvas.toDataURL("image/png")
+				
+				// Replace it with a stream so that
+				// it starts downloading
+				canvasData.replace("image/png", "image/octet-stream")
+				
+				// Set the location href to the canvas data
+				linkElement.setAttribute('href', canvasData);
+				
+				// Click on the link to start the download 
+				linkElement.click();
+			}
+			
+			let cameraOffset = { x: window.innerWidth/2, y: window.innerHeight/2 }
+			let cameraZoom = 1
+			let MAX_ZOOM = 10
+			let MIN_ZOOM = 0.1
+			let SCROLL_SENSITIVITY = 0.0005
+			
+			function draw(filterString){
+				canvas.width = window.innerWidth
+				canvas.height = window.innerHeight
+				
+				context.save();
+				
+				// Translate to the canvas centre before zooming - so you'll always zoom on what you're looking directly at
+				context.translate( window.innerWidth / 2, window.innerHeight / 2 )
+				context.scale(cameraZoom, cameraZoom)
+				context.translate( -window.innerWidth / 2 + cameraOffset.x, -window.innerHeight / 2 + cameraOffset.y )
+				
+				context.filter = filterString;
+				drawImage(image, 0, 0);
+				
+				context.restore();
+				
+				requestAnimationFrame(function(){draw(filterString)})
+			}
+			
+			function draw2(){
+				canvas.width = window.innerWidth
+				canvas.height = window.innerHeight
+				
+				// Translate to the canvas centre before zooming - so you'll always zoom on what you're looking directly at
+				context.translate( window.innerWidth / 2, window.innerHeight / 2 )
+				context.scale(cameraZoom, cameraZoom)
+				context.translate( -window.innerWidth / 2 + cameraOffset.x, -window.innerHeight / 2 + cameraOffset.y )
+				context.clearRect(0,0, window.innerWidth, window.innerHeight)
+				context.fillStyle = "#991111"
+				drawRect(-50,-50,100,100)
+				
+				context.fillStyle = "#eecc77"
+				drawRect(-35,-35,20,20)
+				drawRect(15,-35,20,20)
+				drawRect(-35,15,70,20)
+				
+				context.fillStyle = "#fff"
+				drawText("Simple Pan and Zoom Canvas", -255, -100, 32, "courier")
+				
+				context.rotate(-31*Math.PI / 180)
+				context.fillStyle = `#${(Math.round(Date.now()/40)%4096).toString(16)}`
+				drawText("Now with touch!", -110, 100, 32, "courier")
+				
+				context.fillStyle = "#fff"
+				context.rotate(31*Math.PI / 180)
+				
+				drawText("Wow, you found me!", -260, -2000, 48, "courier")
+				
+				requestAnimationFrame( draw )
+			}
+			
+			// Gets the relevant location from a mouse or single touch event
+			function getEventLocation(e){
+				if (e.touches && e.touches.length == 1){
+					return { x:e.touches[0].clientX, y: e.touches[0].clientY }
+				} else if (e.clientX && e.clientY) {
+					return { x: e.clientX, y: e.clientY }        
+				}
+			}
+
+			function drawImage(img, x, y, width, height){
+				(width && height ) ? context.drawImage(img, x, y, width, height) : context.drawImage(img, x, y);
+			}
+			
+			function drawRect(x, y, width, height){
+				context.fillRect( x, y, width, height )
+			}
+			
+			function drawText(text, x, y, size, font){
+				context.font = `${size}px ${font}`
+				context.fillText(text, x, y)
+			}
+			
+			let isDragging = false
+			let dragStart = { x: 0, y: 0 }
+	
+			function onPointerDown(e){
+				isDragging = true
+				dragStart.x = getEventLocation(e).x/cameraZoom - cameraOffset.x
+				dragStart.y = getEventLocation(e).y/cameraZoom - cameraOffset.y
+			}
+			
+			function onPointerUp(e){
+				isDragging = false
+				initialPinchDistance = null
+				lastZoom = cameraZoom
+			}
+			
+			function onPointerMove(e){
+				if (isDragging){
+					cameraOffset.x = getEventLocation(e).x/cameraZoom - dragStart.x
+					cameraOffset.y = getEventLocation(e).y/cameraZoom - dragStart.y
+				}
+			}
+			
+			function handleTouch(e, singleTouchHandler){
+				if ( e.touches.length == 1 ){
+					singleTouchHandler(e)
+				} else if (e.type == "touchmove" && e.touches.length == 2){
+					isDragging = false
+					handlePinch(e)
+				}
+			}
+			
+			let initialPinchDistance = null
+			let lastZoom = cameraZoom
+			
+			function handlePinch(e){
+				e.preventDefault()
+				
+				let touch1 = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+				let touch2 = { x: e.touches[1].clientX, y: e.touches[1].clientY }
+				
+				// This is distance squared, but no need for an expensive sqrt as it's only used in ratio
+				let currentDistance = (touch1.x - touch2.x)**2 + (touch1.y - touch2.y)**2
+				
+				if (initialPinchDistance == null){
+					initialPinchDistance = currentDistance
+				} else {
+					adjustZoom( null, currentDistance/initialPinchDistance )
+				}
+			}
+			
+			function adjustZoom(zoomAmount, zoomFactor){
+				if(!isDragging){
+					if(zoomAmount){
+						cameraZoom += zoomAmount
+					} else if(zoomFactor){
+						console.log(zoomFactor)
+						cameraZoom = zoomFactor*lastZoom
+					}
+					
+					cameraZoom = Math.min(cameraZoom, MAX_ZOOM)
+					cameraZoom = Math.max(cameraZoom, MIN_ZOOM)
+					
+					console.log(zoomAmount)
+				}
+			}
+			
+			let in_editor_mode = true;
+			function toggleEditMode(e){
+				let img = sourceImage, cnv = canvas, target = e?.target || null;
+				if(in_editor_mode === true){
+					cnv.style.display = "block";
+					img.style.display = "none";
+					if(target) target.textContent = "Editing";
+					in_editor_mode = false;
+				} else {
+					img.style.display = "block";
+					cnv.style.display = "none";
+					if(target) target.textContent = "Edit?";
+					in_editor_mode = true;
+				}
+			}
+			
+			document.addEventListener("click", (e) => {
+				//e.preventDefault();
+				let target = e.target;
+				console.log(cameraZoom, target, target.id)
+				if(cameraZoom >= MIN_ZOOM && cameraZoom <= MAX_ZOOM){
+					if(target.id === "zoom-in"){
+						cameraZoom *= 1.1;
+					}
+					if(target.id === "zoom-out"){
+						cameraZoom /= 1.1;
+					}
+					draw();
+				}
+			});
+		
+			canvas.addEventListener('mousedown', onPointerDown)
+			canvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown))
+			canvas.addEventListener('mouseup', onPointerUp)
+			canvas.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp))
+			canvas.addEventListener('mousemove', onPointerMove)
+			canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove))
+			canvas.addEventListener( 'wheel', (e) => adjustZoom(e.deltaY*SCROLL_SENSITIVITY))
+			
+			image.addEventListener('mousedown', onPointerDown)
+			image.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown))
+			image.addEventListener('mouseup', onPointerUp)
+			image.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp))
+			image.addEventListener('mousemove', onPointerMove)
+			image.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove))
+			image.addEventListener( 'wheel', (e) => adjustZoom(e.deltaY*SCROLL_SENSITIVITY))
+			
+			// Ready, set, go
+			//draw()
+		</script>
+	</body>
+</html>

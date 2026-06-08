@@ -1,0 +1,453 @@
+<html class="red-skin">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="language" content="en"/>
+		<meta name="title" content="AKD Launcher & Workspace"/>
+		<meta name="description" content="This free tool lets you manage your inventory." />
+		<meta name="author" content="Amalkong"/>
+		<meta name="robots" content="no-index"/>
+		<title>AKD Launcher & Workspace</title>
+		<link rel="stylesheet" type="text/css" href="./css/prism.css" />
+		<link rel="stylesheet" href="./_projects/traversy_media_mashup/css/themes/highlight/default.min.css" id="highlight-theme" />
+		<link href="./third_party/codemirror-5.65.18/lib/codemirror.css" rel="stylesheet" />
+		<!--<link rel="stylesheet" href="./css/intellij-light.min.css" />-->
+		<link rel="stylesheet" href="./css/lib/fontawesome-free-6.7.2-web/css/all.min.css" />
+		<link rel="stylesheet" href="./css/akd.css?_=365982" />
+		<link rel="stylesheet" href="./css/index.css?_=65333" />
+		<link rel="shortcut icon" href="./favicon.png" type="image/png" />
+		<link rel="manifest" href="./manifest.json" />
+		<style type="text/css">
+			.icon-button{
+				
+			}
+			.icon-button.local{
+				
+			}
+			.icon-button > i{
+				font-size: 2rem;
+				text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+			}
+			.icon-button.local > b{
+				text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+			}
+			.sidebar--active-left.sidebar--active-right .icon-button > i{font-size: 3rem;}
+			.sidebar--active-left.sidebar--active-right .icon-button > b{display: none;}
+			.pill-buttons{
+				display: flex;
+				gap: 0px;
+				flex-direction: row;
+				border-radius: 1rem;
+			}
+			.pill-buttons > *{
+				border-radius: 0 !important;
+			}
+			.pill-buttons > *:first-child{
+				border-radius: 1rem 0 0 1rem !important;
+				border-right: 0;
+			}
+			.pill-buttons > *:last-child{
+				border-radius: 0 1rem 1rem 0 !important;
+				border-left: 0;
+			}
+				
+			.page-finder-wrapper{
+				z-index: -5;
+				position: absolute;
+				left: 0;
+				bottom: auto;
+				top: 1rem;
+				display: flex;
+				gap: 0.5rem;
+				opacity: 0;
+				translate: 0 0%;
+				max-width: 700px;left: 50%;translate: -50% 0%;
+				transition: translate 0.5s ease, opacity 0.1s linear;
+			}
+			.page-finder-wrapper.--active{
+				z-index: 5;
+				top: auto;
+				bottom: 0.25rem;
+				opacity: 1;
+				translate: 0 -100%;
+				translate: -50% -100%;
+				transition: translate 0.5s ease, opacity 0.5s linear;
+			}
+			
+			/* --------------------------------------- */
+			#dom-inspector-container{
+				z-index: 100;position: absolute;display: block;width: 100%;height: 40%;
+				left: 0;
+				bottom: 0;
+				top: auto;
+				display: flex;
+				gap: 0.5rem;
+				opacity: 0;
+				translate: 0 100%;
+				left: 50%;translate: -50% 100%;
+				transition: translate 0.5s ease, opacity 0.1s linear;overflow: auto;
+			}
+			#dom-inspector-container.--active{
+				bottom: 3rem;
+				opacity: 1;
+				translate: 0 0;
+				translate: -50% 0%;
+				transition: translate 0.5s ease, opacity 0.5s linear;
+			}
+			
+			.slide-box{z-index: 100;position: absolute;isolation: isolate;opacity: 0;transition: translate 0.5s ease, opacity 0.1s linear;/*left: 0;display: block;width: 100%;height: 40%;display: flex;gap: 0.5rem;overflow: auto;*/}
+			.slide-box.--active{opacity: 1;transition: translate 0.5s ease, opacity 0.5s linear;}
+			.slide-box.--up{bottom: 0;top: auto;left: 50%;translate: -50% 100%;}
+			.slide-box.--up.--active{bottom: 3rem;translate: -50% 0%;}
+			.slide-box.--down{top: 0.5rem;bottom: auto;left: 50%;translate: -50% 0%;}
+			.slide-box.--down.--active{translate: -50% 100%;}
+
+.note-book-container textarea{
+	z-index: 1;position: relative;isolation: isolate;display: block;width: 100%;height: 100%;border: none;box-shadow: none;margin: 0;
+  background-image: repeating-linear-gradient(rgba(255, 255, 255, 0.4) 0px, rgba(255, 255, 255, 0.4) 25px, rgba(0, 0, 0, 0.2) 26px);
+  padding-top: 6px;
+  padding-left: 90px;
+  padding-right: 40px;
+  line-height: 26px;
+  font-family: "Shadows Into Light", cursive;
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 1px;
+  word-spacing: 4px;
+}
+.note-book-container {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.4);
+  background-image: url("paper-texture.png");
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px; 
+}
+.note-book-container::before {
+	z-index: 2;
+  content: '@';
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 60px;
+  background-color: rgba(255, 0, 0, 0.4);
+}
+
+.note-book-container::after {
+	z-index: 2;
+  content: '';
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 63px;
+  background-color: rgba(255, 0, 0, 0.4);
+}
+.mask{z-index: 101;position: absolute;display: flex;margin: 0;padding: 0;background--color: rgba(0, 0, 0, 0.5);background: inherit;}
+		</style>
+		<!-- <style>
+			body {
+				margin: 1em auto;
+				max-width: 40em;
+				width: 88%;
+				background: conic-gradient(red, orange, yellow, green, blue);
+				background: conic-gradient(red 6deg, orange 6deg 18deg, yellow 18deg 45deg, green 45deg 110deg, blue 110deg 200deg, purple 200deg);
+				background: conic-gradient(from 3.1416rad at 10% 50%, #e66465, #9198e5);
+				background: conic-gradient(from 0.25turn at 50% 30%, #f69d3c, 10deg, #3f87a6, 350deg, #ebf8e1);
+			}
+			label,textarea, iframe {display: block;width: 100%;}
+			textarea {margin-bottom: 1.5em;min-height: 8em;}
+			.editor {display: grid;grid-template-columns: 1fr;grid-template-rows: 1fr;gap: 0;}
+			.editor pre,
+			.editor textarea {position: relative;grid-area: 1 / 1 / 2 / 2;}
+			/*.editor pre{z-index: 1;}
+			.editor textarea{z-index: 2;}*/
+			pre, .editor textarea {background-color: #f7f7f7;color: #272727;display: block;line-height: 1.5;margin: 0 0 1.5625em;overflow: auto;padding: 0.8125em;white-space: pre-wrap;word-break: break-all;}
+			.editor textarea {background-color: transparent;border: none;color: transparent;caret-color: #000;overflow: hidden;resize: none;width: 100%;}
+			code {word-wrap: break-word;}
+			pre, code, .editor textarea {font-family: Menlo, Monaco, "Courier New", monospace;font-size: 0.875em;}
+			pre code {color: inherit;font-size: 1em;}
+		</style>-->
+	</head>
+	<body>
+		<main id="main" class="main">
+			<header id="main-header" class="">
+				<div class="mask w-12 h-auto flex-center px-4">
+					<span class="d-flex flex-center gap-2 w-4 p- bdr-4" >
+						<span class="pill-buttons w-12 p-2 bdr-4">
+							<button id="menu-toggler" class="menu-toggler btn btn-info py-8 w-12 bdr-4" data-akd-menu-toggler data-akd-button><i class="fa fa-bars"></i></button>
+							<button id="utiliities-toggler2" class="utility-toggler btn btn-info py-8 w-12 bdr-4" data-toggle-target="#utility-bar" data-akd-toggle-button data-akd-button><i class="fa fa-chevron-down"></i></button>
+						</span>
+						<!--<a class="btn btn-success py-8 w-12 bdr-4 d-flex flex-center gap-2 text-md" href="#" data-target="workspace" data-akd-button><i class="fa fa-columns"></i><span class="mobile--hidden">workspace</span></a>-->
+						<button id="-toggler" class="btn btn-info d-flex flex-center gap-2 py-8 w-auto bdr-4" title="" data-target="ai" data-akd-button><i class="fa fa-circle-nodes"></i><span class="mobile--hidden">AI</span></button>
+					</span>
+					<span class="d-flex flex-center w-auto px-6 py-4 gap-2 bdr-4 ml-auto bg-opaque-dark">
+						<ins id="page-name" class="text-truncate text-white text-center"></ins>
+					</span>
+					<span class="w-5 p-2 gap-2 bdr-4 ml-auto">
+						<span class="d-flex bdr-8 bg-success">
+							<span class="d-flex flex-center ws-nowrap bg-opaque p-4" style="border-radius: 1rem 0 0 1rem;">Filter&nbsp;:&nbsp;</span>
+							<select id="filter-category" class="form-select bdr-0" name="filter-category" data-akd-select >
+								<option value="bookmarks" selected>bookmarks</option>
+								<option value="notes">notes</option>
+								<option value="tasks">tasks</option>
+								<option value="audio">audio</option>
+								<option value="videos">videos</option>
+								<option value="images">images</option>
+								<option value="snippets">snippets</option>
+								<!--<option value="fragments">fragments</option>
+								<option value="?">?</option>-->
+							</select>
+							<input id="filter-term" class="w-12 p-4 bdr-0" name="filter-term" type="text" autocomplete="off" onfocus="this.select();" data-akd-input />
+							<input id="filter-case-sensitive" class="my-4 bg-success" name="filter-case-sensitive" type="checkbox" title="toggle case sensitivity" data-akd-input />
+							<button id="filter-submit-button" class="btn btn-success w-auto py-6 px-4 text-md border-0" name="filter-submit-button" type="button" style="border-radius: 0 1rem 1rem 0;border: 0;" data-akd-button>filter</button>
+						</span>
+					</span>
+				</div>
+				<div id="utility-bar" class="slide-box --down w-12 h-12 p-4 bdr-4 bg-violet d-flex flex-row" style="display: grid;grid-template-columns: repeat(auto-fill,minmax(40%,1fr));gap: 0.5rem;">
+					<section class="d-flex flex-col gap-2 p-4 bg-opaque-dark bdr-6">
+						<span class="d-block p-4 text-center text-violet bg-opaque-dark bdr-6">menu</span>
+						<span class="pill-buttons w-auto p-2 mx-auto bdr-4">
+							<button id="-toggler2" class="menu-toggler btn btn-info py-8 bdr-4" data-akd-menu-toggler data-akd-button><i class="fa fa-bars"></i></button>
+							<button id="-toggler" class="prompt-toggler btn btn-info py-8 bdr-4" data-akd-prompt-toggler data-akd-button><i class="fa fa-terminal"></i></button>
+							<button id="-toggler" class="finder-toggler btn btn-info py-8 bdr-4" data-akd-finder-toggler data-akd-button><i class="fa fa-file-circle-question"></i></button>
+							<button id="-toggler" class="dom-inspector-toggler btn btn-info py-8 bdr-4" data-akd-dom-inspector-toggler data-akd-button><i class="fa fa-glasses"></i></button>
+						</span>
+					</section>
+					<section class="d-flex flex-col gap-2 p-4 bg-opaque-dark bdr-6">
+						<span class="d-block p-4 text-center text-violet bg-opaque-dark bdr-6">widgets</span>
+						<span class="d-flex w-auto p-2 mx-auto gap-4">
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-widget="tasks" data-akd-button><i class="fa fa-tasks"></i><span class="mobile--hidden">tasks</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-widget="notes" data-akd-button><i class="fa fa-book"></i><span class="mobile--hidden">notes</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-widget="icons" data-akd-button><i class="fa fa-icons"></i><span class="mobile--hidden">icons</span></button>
+							
+						</span>
+					</section>
+					<section class="d-flex flex-col gap-2 p-4 bg-opaque-dark bdr-6">
+						<span class="d-block p-4 text-center text-violet bg-opaque-dark bdr-6">system</span>
+						<span class="d-flex flex-wrap w-auto p-2 mx-auto gap-4">
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-action="settings" data-akd-button><i class="fa fa-cogs"></i><span class="mobile--hidden">settings</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-action="database" data-akd-button><i class="fa fa-database"></i><span class="mobile--hidden">database</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="" data-action="icons" data-akd-button><i class="fa fa-icons"></i><span class="mobile--hidden">icons</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="import file" data-action="import-file" data-akd-button><i class="fa fa-file-import"></i><span class="mobile--hidden">import</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="export database" data-action="export-database" data-akd-button><i class="fa fa-paper-plane"></i><span class="mobile--hidden">export</span></button>
+							<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 bdr-4" title="view database" data-action="view-database" data-akd-button><i class="fa fa-eye"></i><span class="mobile--hidden">view</span></button>
+						</span>
+					</section>
+					<section class="d-flex flex-col gap-2 p-4 bg-opaque-dark bdr-6">
+						<span class="d-block p-4 text-center text-violet bg-opaque-dark bdr-6">options</span>
+						<span class="d-flex flex-wrap w-auto p-2 mx-auto gap-4">
+						</span>
+					</section>
+					<section class="d-flex flex-col gap-2 p-4 bg-opaque-dark bdr-6">
+						<span class="d-block p-4 text-center text-violet bg-opaque-dark bdr-6">widgets</span>
+						<span class="d-flex flex-wrap w-auto p-2 mx-auto gap-4">
+						</span>
+					</section>
+				</div>
+			</header>
+			
+			<article id="main-body" class="main-body pos-rel d-flex">
+				<aside id="sidebar-navigation" class="sidebar left--side">
+					<header id="sidebar-navigation-head" class="d-flex p-2">
+						<span class="d-flex flex-center gap-2 p-4">
+							<button id="sidebar-navigation-expand-toggler" class="btn btn-purple" type="button"><i class="fas fa-arrows-h"></i></button>
+						</span>
+					</header>
+					<section id="" class="w-12 h-12 overflow-auto">
+						<nav class="nav" role="navigation">
+							<span class="nav-header">Desk</span>
+							<ul class="nav-list">
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="home" data-akd-button><i class="fa fa-home mr-2"></i>home</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="launcher" data-akd-button><i class="fa fa-rocket mr-2"></i>launcher</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="notes" data-akd-button><i class="fa fa-book-open mr-2"></i>notes</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="todos" data-akd-button><i class="fa fa-check mr-2"></i>todos</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="browser" data-akd-button><i class="fa fa-globe mr-2"></i>browser</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="workspace" data-akd-button><i class="fa fa-clipboard mr-2"></i>workspace</a></li>
+							</ul>
+						</nav>
+						<nav class="nav" role="navigation">
+							<span class="nav-header">Multi-Media</span>
+							<ul class="nav-list">
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="picasso" data-akd-button><i class="fa fa-image mr-2"></i>picasso</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="gallery" data-akd-button><i class="fa fa-image mr-2"></i>gallery</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="music" data-akd-button><i class="fa fa-music mr-2"></i>music</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="videos" data-akd-button><i class="fa fa-video mr-2"></i>videos</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="media" data-akd-button><i class="fa fa-heart-music-camera-bolt mr-2"></i>media</a></li>
+							</ul>
+						</nav>
+						<nav class="nav" role="navigation">
+							<span class="nav-header">Tools</span>
+							<ul class="nav-list">
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="fileops" data-akd-button><i class="fa fa-file mr-2"></i>file-ops</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="todos" data-akd-button><i class="fa fa-check mr-2"></i>todos</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="coder" data-akd-button><i class="fa fa-code mr-2"></i>coder</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="editor" data-akd-button><i class="fa fa-edit mr-2"></i>editor</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="ai" data-akd-button><i class="fa fa-circle-nodes mr-2"></i>ai</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="generators" data-akd-button><i class="fa fa-cogs mr-2"></i>generators</a></li>
+							</ul>
+						</nav>
+						<nav class="nav" role="navigation">
+							<span class="nav-header">Dashboard</span>
+							<ul class="nav-list">
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="admin" data-akd-button><i class="fa fa-user mr-2"></i>admin</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="settings" data-akd-button><i class="fa fa-user mr-2"></i>settings</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="apis" data-akd-button><i class="fa fa-code-fork mr-2"></i>apis</a></li>
+							</ul>
+							<ul class="nav-list">
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="snippets" data-akd-button><i class="fa fa-code-branch mr-2"></i>snippets</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="fragments" data-akd-button><i class="fa fa-code-merge mr-2"></i>fragments</a></li>
+								<li class="nav-list-item"><a class="nav-list-link" href="#" data-target="apis" data-akd-button><i class="fa fa-puzzle-piece mr-2"></i>apis</a></li>
+							</ul>
+						</nav>
+					</section>
+					<footer id="sidebar-navigation-foot" class="d-flex p-2">
+					
+					</footer>
+				</aside>
+				<div id="content-display" class="pos-rel" style=""></div>
+				<aside id="sidebar-promp" class="sidebar right--side">
+					<header id="prompt-head" class="d-flex p-2">
+						<span class="d-flex flex-center gap-2 p-4">
+							<button id="prompt-expand-toggler" class="btn btn-purple" type="button"><i class="fas fa-arrows-h"></i></button>
+						</span>
+					</header>
+					<section id="prompt-body" class="">
+						<!--<p>this is the right side</p>
+						<div class="loader"><hr /><hr /><hr /></div>-->
+					</section>
+					<footer id="prompt-foot" class="d-flex gap-1">
+						<input id="prompt-input" class="w-12" type="text" name="" data-akd-input />
+						<button id="prompt-submit" class="w-max" type="button"><i class="fas fa-wand-sparkles"></i></button>
+					</footer>
+				</aside>
+			</article>
+			
+			<footer id="main-footer" class="pos-rel">
+				<span class="page-finder-wrapper pos-abs w-12 h-max p-8 bg-opaque">
+					<input id="page-finder-input" class="w-12  bdr-8" type="text" value="" placeholder="enter a page name eg: 'ai' or 'icons' " onfocus="this.select();" data-akd-input />
+					<button id="page-finder-submit" class="btn btn-info py-8 bdr-4" data-akd-page-finder-submit data-akd-button><i class="fa fa-search"></i></button>
+				</span>
+				<span class="pill-buttons w-auto p-2 bdr-4">
+					<button id="menu-toggler2" class="menu-toggler btn btn-info py-8 w-12 bdr-4" data-akd-menu-toggler data-akd-button><i class="fa fa-bars"></i></button>
+					<button id="prompt-toggler" class="prompt-toggler btn btn-info py-8 w-12 bdr-4" data-akd-prompt-toggler data-akd-button><i class="fa fa-terminal"></i></button>
+					<button id="finder-toggler" class="finder-toggler btn btn-info py-8 w-12 bdr-4" data-akd-finder-toggler data-akd-button><i class="fa fa-file-circle-question"></i></button>
+					<button id="dom-inspector-toggler" class="dom-inspector-toggler btn btn-info py-8 w-12 bdr-4" data-akd-dom-inspector-toggler data-akd-button><i class="fa fa-glasses"></i></button>
+				</span>
+				<span class="pill-buttons w-auto p-2 gap-2 bdr-4 ml-auto">
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="" data-target="tasks" data-akd-button><i class="fa fa-tasks"></i><span class="mobile--hidden">tasks</span></button>
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="" data-target="notes" data-akd-button><i class="fa fa-book"></i><span class="mobile--hidden">notes</span></button>
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="" data-target="icons" data-akd-button><i class="fa fa-icons"></i><span class="mobile--hidden">icons</span></button>
+				</span>
+				<span class="pill-buttons w-auto p-2 gap-2 bdr-4 ml-auto">
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="import file" data-action="import-file" data-akd-button><i class="fa fa-file-import"></i><span class="mobile--hidden">import</span></button>
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="export database" data-action="export-database" data-akd-button><i class="fa fa-paper-plane"></i><span class="mobile--hidden">export</span></button>
+					<button id="-toggler" class="btn btn-info d-flex gap-2 py-8 w-12 bdr-4" title="view database" data-action="view-database" data-akd-button><i class="fa fa-eye"></i><span class="mobile--hidden">view</span></button>
+				</span>
+			</footer>
+		</main>
+		
+		<div id="dom-inspector-container" ></div>
+		
+		<div id="pinpad-modal-shield" style="display: none;"></div>
+		
+		<div id="pinpad-modal" class="pinpad-modal" style="display: none;">
+			<div class="pinpad-modal-body">
+				<span id="pinpad-close">×</span>
+				<div class="pinpad">
+					<div class="pinpad-header">
+						<input type="password" id="pinpad-input" placeholder="enter pin" readonly />
+						<button type="button" class="" id="pinpad-show-password"><i class="fa fa-eye"></i></button>
+					</div>
+					<div class="pinpad-keypad">
+						<div class="row">
+							<button type="button" class="pinpad-btn" value="1">1</button>
+							<button type="button" class="pinpad-btn" value="2">2</button>
+							<button type="button" class="pinpad-btn" value="3">3</button>
+						</div>
+						<div class="row">
+							<button type="button" class="pinpad-btn" value="4">4</button>
+							<button type="button" class="pinpad-btn" value="5">5</button>
+							<button type="button" class="pinpad-btn" value="6">6</button>
+						</div>
+						<div class="row">
+							<button type="button" class="pinpad-btn" value="7">7</button>
+							<button type="button" class="pinpad-btn" value="8">8</button>
+							<button type="button" class="pinpad-btn" value="9">9</button>
+						</div>
+						<div class="row">
+							<button type="button" class="pinpad-btn" value="del" id="pinpad-delete-btn">Del</button>
+							<button type="button" class="pinpad-btn" value="0">0</button>
+							<button type="button" class="pinpad-btn" value="ok" id="pinpad-submit-btn">Ok</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="html/template" id="home-tmpl">
+			<article id="" class="">
+				<h1>{{ title }}</h1>
+				<ul class="">
+				{% for item in items %}
+					<li class=""><span class="" data-key>{{ item.id }}</span>&nbsp;|&nbsp;<span>{{ item.rate }}</span>&nbsp;|&nbsp;<span class="" data-value>{{ item.size }}</span></li>
+				{% endfor %}
+				</ul>
+				
+				<ul class="">
+				{% for key, item in items %}
+					<li class="">{{ key }} <span class="" data-key>{{ item.id }}</span>&nbsp;|&nbsp;<span>{{ item.rate }}</span>&nbsp;|&nbsp;<span class="" data-value>{{ item.size }}</span></li>
+				{% elese %}
+					<li class=""><em class="text-lg">No items</em></li>
+				{% endfor %}
+				</ul>
+			</article>
+		</script>
+		<script type="text/javascript" src="./js/lib/jquery/jquery-3.6.0.min.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/lib/codemirror.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/selection/selection-pointer.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/edit/matchbrackets.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/comment/continuecomment.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/comment/comment.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/xml/xml.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/jsx/jsx.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/javascript/javascript.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/css/css.js"></script>
+		<script type="text/javascript" src="./third_party/codemirror-5.65.18/mode/htmlmixed/htmlmixed.js"></script>
+		<!--<script type="text/javascript" src="./third_party/codemirror-5.65.18/addon/edit/matchbrackets.js"></script>-->
+		<script type="text/javascript" src="./_projects/traversy_media_mashup/js/lib/highlight.min.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/minify.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/utils.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/ast.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/parse.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/transform.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/scope.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/output.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/compress.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/UglifyJS/lib/propmangle.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/js-beautify/beautifier.min.js"></script>
+		<!--<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/js-beautify/js_beautify.js"></script>
+		<script type="text/javascript" src="./_projects/postman-clone-main/js/lib/vk/vkbeautify.js"></script>-->
+		
+		<script type="text/javascript" src="./js/akd-util.js"></script>
+		<script type="text/javascript" src="./js/lib/marked/marked.min.js"></script>
+		<script type="text/javascript" src="./js/lib/prism.js" manual></script>
+		<script type="text/javascript" src="./js/lib/ashe/ashe.js"></script>
+		<script type="text/javascript" src="./js/tools/CSVJSON.js"></script>
+		<script type="text/javascript" src="./js/lib/yaml/yaml.min.js"></script>
+		<script type="text/javascript" src="./js/akd-code-formatter.js"></script>
+		<script type="text/javascript" src="./js/akd-svg-icons-creator.js"></script>
+		<script type="text/javascript" src="./js/index.js"></script>
+		<!-- <script>
+			let template = document.getElementById("home-tmpl").innerHTML;
+			let parsed = Ashe.parse(template, {
+				title: "Brand New Shoes", 
+				items: [
+					{id: 23, rate: .5, size: 11}, 
+					{id: 34, rate: .7, size: 10}, 
+				]
+			});
+			document.getElementById("content-display").innerHTML = parsed;
+		</script>-->
+	</body>
+</html>
